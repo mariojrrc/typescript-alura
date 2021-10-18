@@ -3,7 +3,7 @@ import { View } from "./view.js";
 
 export class Negotiations extends View<NegotiationsModel> {
 
-    template(model: NegotiationsModel): string {
+    protected template(model: NegotiationsModel): string {
         return `
         <table class="table table-hover table-bordered">
             <thead>
@@ -18,7 +18,7 @@ export class Negotiations extends View<NegotiationsModel> {
                 ${model.toArray().map(n => {
             return `
                     <tr>
-                        <td>${new Intl.DateTimeFormat().format(n.date)}</td>
+                        <td>${this.formatDate(n.date)}</td>
                         <td>${n.quantity}</td>
                         <td>${n.price}</td>
                         <td>${n.total}</td>

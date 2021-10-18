@@ -15,7 +15,7 @@ export class Negotiations extends View {
                 ${model.toArray().map(n => {
             return `
                     <tr>
-                        <td>${new Intl.DateTimeFormat().format(n.date)}</td>
+                        <td>${this.formatDate(n.date)}</td>
                         <td>${n.quantity}</td>
                         <td>${n.price}</td>
                         <td>${n.total}</td>

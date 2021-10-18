@@ -12,33 +12,38 @@ export class Negotiation {
     private messageView = new MessageNegotiations('#messageView');
 
     constructor() {
-        this.inputDate = document.querySelector('#data');
-        this.inputQuantity = document.querySelector('#quantidade');
-        this.inputValue = document.querySelector('#valor');
+        this.inputDate = document.querySelector('#data') as HTMLInputElement;
+        this.inputQuantity = document.querySelector('#quantidade') as HTMLInputElement;
+        this.inputValue = document.querySelector('#valor') as HTMLInputElement;
         this.negotitiationsView.update(this.negotiations);
     }
 
-    add(): void {
-        const negotiation: NegotiationModel = this.createNegotiation();
+    public add(): void {
+        const negotiation: NegotiationModel = NegotiationModel.createNegotiation(
+            this.inputDate.value.replace(/-/g, ','),
+            this.inputQuantity.value,
+            this.inputValue.value
+        );
+
+        if (!negotiation.isWeekDay()) {
+            this.messageView.update('Negociações só podem ser realizadas em dias úteis.');
+            return;
+        }
+
         this.negotiations.add(negotiation);
-        this.negotitiationsView.update(this.negotiations);
-        this.messageView.update('Negociação adicionada com sucesso!');
+        this.refreshView();
         this.clearForm();
     }
 
-    createNegotiation(): NegotiationModel {
-        return new NegotiationModel(
-            new Date(this.inputDate.value.replace(/-/g, ',')),
-            'zyx',
-            parseInt(this.inputQuantity.value, 10),
-            parseFloat(this.inputValue.value)
-        );
-    }
-
-    clearForm(): void {
+    private clearForm(): void {
         this.inputDate.value = '';
         this.inputQuantity.value = '1';
         this.inputValue.value = '0.0';
         this.inputDate.focus();
+    }
+
+    private refreshView(): void {
+        this.negotitiationsView.update(this.negotiations);
+        this.messageView.update('Negociação adicionada com sucesso!');
     }
 }

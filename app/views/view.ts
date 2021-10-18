@@ -1,16 +1,24 @@
-export class View<T> {
+export abstract class View<T> {
     protected element: HTMLElement;
 
-    constructor(selector: string) {
-        this.element = document.querySelector(selector);
+    constructor(selector: string, private escape?: boolean) {
+        const el = document.querySelector(selector);
+        if (!el) {
+            throw new Error(`Element not found: ${selector}`);
+        }
+
+        this.element = el as HTMLElement;
     }
 
-    template(model: T): string {
-        throw new Error('Method not implemented.');
-    }
 
-    update(model: T): void {
+    protected abstract template(model: T): string;
+
+    public update(model: T): void {
         const template = this.template(model);
-        this.element.innerHTML = template;
+        this.element.innerHTML = this.escape ? template.replace('/<script>[\s\S]*?<\/script>', '') : template;
+    }
+
+    protected formatDate(date: Date): string {
+        return new Intl.DateTimeFormat().format(date);
     }
 }
