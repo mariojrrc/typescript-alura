@@ -4,25 +4,27 @@ import { MessageNegotiations } from "../views/messageNegotiations.js";
 import { Negotiations as NegotiationsView } from "../views/negotiations.js";
 
 export class Negotiation {
-    private inputDate: HTMLInputElement;
-    private inputQuantity: HTMLInputElement;
-    private inputValue: HTMLInputElement;
+    private inputDate: JQuery;
+    private inputQuantity: JQuery;
+    private inputValue: JQuery;
     private negotiations: Negotiations = new Negotiations();
     private negotitiationsView = new NegotiationsView('#negotiationsView');
     private messageView = new MessageNegotiations('#messageView');
 
     constructor() {
-        this.inputDate = document.querySelector('#data') as HTMLInputElement;
-        this.inputQuantity = document.querySelector('#quantidade') as HTMLInputElement;
-        this.inputValue = document.querySelector('#valor') as HTMLInputElement;
+        this.inputDate = $('#data');
+        this.inputQuantity = $('#quantidade');
+        this.inputValue = $('#valor');
         this.negotitiationsView.update(this.negotiations);
     }
 
-    public add(): void {
+    public add(event: Event): void {
+        event.preventDefault();
+
         const negotiation: NegotiationModel = NegotiationModel.createNegotiation(
-            this.inputDate.value.replace(/-/g, ','),
-            this.inputQuantity.value,
-            this.inputValue.value
+            this.inputDate.val().replace(/-/g, ','),
+            this.inputQuantity.val(),
+            this.inputValue.val()
         );
 
         if (!negotiation.isWeekDay()) {
@@ -36,9 +38,9 @@ export class Negotiation {
     }
 
     private clearForm(): void {
-        this.inputDate.value = '';
-        this.inputQuantity.value = '1';
-        this.inputValue.value = '0.0';
+        this.inputDate.val('');
+        this.inputQuantity.val('1');
+        this.inputValue.val('0.0');
         this.inputDate.focus();
     }
 

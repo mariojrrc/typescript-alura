@@ -7,13 +7,14 @@ export class Negotiation {
         this.negotiations = new Negotiations();
         this.negotitiationsView = new NegotiationsView('#negotiationsView');
         this.messageView = new MessageNegotiations('#messageView');
-        this.inputDate = document.querySelector('#data');
-        this.inputQuantity = document.querySelector('#quantidade');
-        this.inputValue = document.querySelector('#valor');
+        this.inputDate = $('#data');
+        this.inputQuantity = $('#quantidade');
+        this.inputValue = $('#valor');
         this.negotitiationsView.update(this.negotiations);
     }
-    add() {
-        const negotiation = NegotiationModel.createNegotiation(this.inputDate.value.replace(/-/g, ','), this.inputQuantity.value, this.inputValue.value);
+    add(event) {
+        event.preventDefault();
+        const negotiation = NegotiationModel.createNegotiation(this.inputDate.val().replace(/-/g, ','), this.inputQuantity.val(), this.inputValue.val());
         if (!negotiation.isWeekDay()) {
             this.messageView.update('Negociações só podem ser realizadas em dias úteis.');
             return;
@@ -23,9 +24,9 @@ export class Negotiation {
         this.clearForm();
     }
     clearForm() {
-        this.inputDate.value = '';
-        this.inputQuantity.value = '1';
-        this.inputValue.value = '0.0';
+        this.inputDate.val('');
+        this.inputQuantity.val('1');
+        this.inputValue.val('0.0');
         this.inputDate.focus();
     }
     refreshView() {
